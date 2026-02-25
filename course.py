@@ -1,5 +1,7 @@
 from tkinter import*
 from PIL import Image,ImageTk #pip install pillow
+from tkinter import ttk
+from tkinter import messagebox
 class CourseClass:
     def __init__(self,root):
 
@@ -30,15 +32,28 @@ class CourseClass:
         txt_duration=Entry(self.root,textvariable=self.var_duration  ,  font=("goudy old style",15,"bold"),bg="lightyellow").place(x=150,y=100,width=200)
         txt_charges=Entry(self.root,textvariable=self.var_charges,    font=("goudy old style",15,"bold"),bg="lightyellow").place(x=150,y=140,width=200)
         self.txt_description=Text(self.root,font=("goudy old style",15,"bold"),bg="lightyellow")
-        self.txt_description.place(x=150,y=185,width=500,height=100)
+        self.txt_description.place(x=150,y=185,width=500,height=130)
 
+        #buttons
+        self.btn_add=Button(self.root,text="Save",font=("goudy old style",15,"bold"),bg="#2196f3",fg="white",cursor="hand2")
+        self.btn_add.place(x=150,y=400,width=110,height=40)
+        self.btn_update=Button(self.root,text="Update",font=("goudy old style",15,"bold"),bg="#4caf50",fg="white",cursor="hand2")
+        self.btn_update.place(x=270,y=400,width=110,height=40)
+        self.btn_delete=Button(self.root,text="Delete",font=("goudy old style",15,"bold"),bg="#f44336",fg="white",cursor="hand2")
+        self.btn_delete.place(x=390,y=400,width=110,height=40)
+        self.btn_clear=Button(self.root,text="Clear",font=("goudy old style",15,"bold"),bg="#607d8b",fg="white",cursor="hand2")
+        self.btn_clear.place(x=510,y=400,width=110,height=40)
+        #---------search panel--------
+        self.var_search=StringVar()
+        lbl_search_coursename=Label(self.root,text="Course Name",  font=("goudy old style",15,"bold"),bg="white").place(x=720,y=60)
+        txt_search_courseName=Entry(self.root,textvariable=self.var_search, font=("goudy old style",15,"bold"),bg="lightyellow").place(x=870,y=60,width=180)
+        btn_search=Button(self.root,text="Search",font=("goudy old style",15,"bold"),bg="#03a9f4",fg="white",cursor="hand2").place(x=1070,y=60,width=120,height=28)
+        #---------content table--------
+        self.C_frame=Frame(self.root,bd=2,relief=RIDGE)
+        self.C_frame.place(x=720,y=100,width=470,height=340)
 
-
-
-
-
-
-
+        self.course_table=ttk.Treeview(self.C_frame,columns=("cid","name","duration","charges","description"))
+        self.course_table.pack(fill=BOTH,expand=1)
 
 if __name__=="__main__":
     root=Tk()
