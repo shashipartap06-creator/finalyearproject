@@ -3,10 +3,10 @@ from PIL import Image,ImageTk #pip install pillow
 from tkinter import ttk
 from tkinter import messagebox
 import sqlite3
+from create_db import create_db
+
 class CourseClass:
     def __init__(self,root):
-
-
 
         self.root=root
         self.root.title("STUDENT RESULT MANAGEMENT SYSTEM")
@@ -98,7 +98,7 @@ class CourseClass:
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to {str(ex)}") 
 
-
+        create_db()
 if __name__=="__main__":
     root=Tk()
     obj=CourseClass(root)
