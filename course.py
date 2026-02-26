@@ -73,7 +73,17 @@ class CourseClass:
         self.course_table.column("charges",width=100)
         self.course_table.column("description",width=150)
         self.course_table.pack(fill=BOTH,expand=1)
+        self.course_table.bind("<ButtonRelease-1>",self.get_data)   
+
+
+
+        self.show()
         #-------------------------------------------------------------
+    def get_data(self):
+        r=self.course_table.focus()
+        content=self.course_table.item(r)
+        row=content['values']
+        
     def add(self):
         con=sqlite3.connect(database="rms.db")
         cur=con.cursor()
@@ -98,7 +108,22 @@ class CourseClass:
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to {str(ex)}") 
 
-        create_db()
+
+    def show(self):
+        con=sqlite3.connect(database="rms.db")
+        cur=con.cursor()
+        try:
+            cur.execute("select * from course")
+            rows=cur.fetchall()
+            self.course_table.delete(*self.course_table.get_children())
+            for row in rows:
+                self.course_table.insert('',END,values=row)
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error due to {str(ex)}")
+            self.show()
+
+
+    create_db()
 if __name__=="__main__":
     root=Tk()
     obj=CourseClass(root)
