@@ -19,6 +19,7 @@ class reportClass:
 
         #---------srearch panel------
         self.var_search=StringVar()
+        self.var_id=""
         lbl_search=Label(self.root,text="Search by Roll No",font=("goudy old style",20),bg="white").place(x=280,y=100)
         txt_search=Entry(self.root,textvariable=self.var_search ,font=("goudy old style",20),bg="lightyellow").place(x=520,y=100,width=150)
         btn_search=Button(self.root,text="Search",font=("goudy old style",15,"bold"),bg="#0390d6",fg="white",cursor="hand2",command=self.search).place(x=680,y=100,width=100,height=35)
@@ -49,7 +50,7 @@ class reportClass:
         self.per.place(x=900,y=280,width=150,height=50)
         
         #---------button delete------
-        btn_delete=Button(self.root,text="Delete",font=("goudy old style",15,"bold"),bg="red",fg="white",cursor="hand2").place(x=500,y=350,width=150,height=35)
+        btn_delete=Button(self.root,text="Delete",font=("goudy old style",15,"bold"),bg="red",fg="white",cursor="hand2",command=self.delete).place(x=500,y=350,width=150,height=35)
 
         #---------search function------
     def search(self):
@@ -62,6 +63,7 @@ class reportClass:
                 cur.execute("select * from result where roll=?",(self.var_search.get(),))
                 row=cur.fetchone()
                 if row!=None:
+                    self.var_id=row[0]
                     self.roll.config(text=row[1])
                     self._name.config(text=row[2])
                     self.course.config(text=row[3])
@@ -75,6 +77,7 @@ class reportClass:
             messagebox.showerror("Error",f"Error due to {str(ex)}",parent=self.root)
 
     def clear(self):
+        self.var_id=""
         self.var_search.set("")
         self.roll.config(text="")
         self._name.config(text="")
@@ -83,7 +86,27 @@ class reportClass:
         self.fullmarks.config(text="")
         self.per.config(text="")
         self.var_search.set("")
-            
+
+    def delete(self):
+        con=sqlite3.connect(database="rms.db")
+        cur=con.cursor()
+        try:
+            if self.var_id=="":
+                messagebox.showerror("Error","Search for a record to delete",parent=self.root)
+            else:
+                cur.execute("select * from result where rid=?",(self.var_id,))
+                row=cur.fetchone()
+                if row==None:
+                    messagebox.showerror("Error","Record not found, try different",parent=self.root)
+                else:
+                    op=messagebox.askyesno("Confirm","Do you really want to delete?",parent=self.root)
+                    if op==True:
+                        cur.execute("delete from result where rid=?",(self.var_id,))
+                        con.commit()
+                        messagebox.showinfo("Delete","Result deleted successfully",parent=self.root)
+                        self.clear()
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error due to {str(ex)}")            
 if __name__=="__main__":
 
     root=Tk()
