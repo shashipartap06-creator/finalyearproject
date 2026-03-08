@@ -3,6 +3,7 @@ from PIL import Image,ImageTk #pip install pillow
 from tkinter import ttk,messagebox
 #import pymysql
 import sqlite3
+import os
 class Register:
     def __init__(self,root):
         self.root=root
@@ -30,30 +31,34 @@ class Register:
         self.txt_lname.place(x=370,y=130,width=250)
 
         #=======Row2=======
-        contact=Label(frame1,text="Contact No",font=("times new roman",15,"bold"),bg="white").place(x=50,y=170)
+        contact=Label(frame1,text="Contact No.",font=("times new roman",15,"bold"),bg="white").place(x=50,y=170)
         self.txt_contact=Entry(frame1,font=("times new roman",15),bg="lightgray")
         self.txt_contact.place(x=50,y=200,width=250)
 
+        email=Label(frame1,text="Email",font=("times new roman",15,"bold"),bg="white").place(x=370,y=170)
+        self.txt_email=Entry(frame1,font=("times new roman",15),bg="lightgray")
+        self.txt_email.place(x=370,y=200,width=250)
+
         #======Row3=======
-        question=Label(frame1,text="Select Security Question",font=("times new roman",15,"bold"),bg="white").place(x=370,y=170)
+        question=Label(frame1,text="Security Question",font=("times new roman",15,"bold"),bg="white").place(x=50,y=240)
 
         self.cmb_quest=ttk.Combobox(frame1,font=("times new roman",15),state="readonly",justify=CENTER)
         self.cmb_quest['values']=("Select","Your Birth Place","Your Girlfriend Name","Your Pet Name")
         self.cmb_quest.place(x=50,y=270,width=250)
         self.cmb_quest.current(0)
-        
+
         answer=Label(frame1,text="Answer",font=("times new roman",15,"bold"),bg="white").place(x=370,y=240)
         self.txt_answer=Entry(frame1,font=("times new roman",15),bg="lightgray")
         self.txt_answer.place(x=370,y=270,width=250)
-        #=======Row2=======
 
+        #=======Row4=======
         password=Label(frame1,text="Password",font=("times new roman",15,"bold"),bg="white").place(x=50,y=320)
-        self.txt_password=Entry(frame1,font=("times new roman",15),bg="lightgray")
-        self.txt_password.place(x=50,y=340,width=250)
+        self.txt_password=Entry(frame1,font=("times new roman",15),bg="lightgray",show="*")
+        self.txt_password.place(x=50,y=350,width=250)
 
         cpassword=Label(frame1,text="Confirm Password",font=("times new roman",15,"bold"),bg="white").place(x=370,y=320)
-        self.txt_cpassword=Entry(frame1,font=("times new roman",15),bg="lightgray")
-        self.txt_cpassword.place(x=370,y=340,width=250)
+        self.txt_cpassword=Entry(frame1,font=("times new roman",15),bg="lightgray",show="*")
+        self.txt_cpassword.place(x=370,y=350,width=250)
 
         #=======Terms=======
         self.var_chk=IntVar()
@@ -66,17 +71,17 @@ class Register:
 
     def login_window(self):
         self.root.destroy()
-        import login
+        os.system("python login.py")
 
     def clear(self):
         self.txt_fname.delete(0,END)
         self.txt_lname.delete(0,END)
         self.txt_contact.delete(0,END)
+        self.txt_email.delete(0,END)
         self.cmb_quest.current(0)
         self.txt_answer.delete(0,END)
         self.txt_password.delete(0,END)
         self.txt_cpassword.delete(0,END)
-        self.cmb_quest.current(0)
 
     def register_data(self):
         if self.txt_fname.get()=="" or self.txt_contact.get()=="" or self.cmb_quest.get()=="Select":
@@ -95,7 +100,7 @@ class Register:
                 if row!=None:
                     messagebox.showerror("Error","User already exist, please try with another contact",parent=self.root)
                 else:
-                    cur.execute("insert into employee (f_name,l_name,contact,email,question,answer,password) values(?,?,?,?,?,?)",(
+                    cur.execute("insert into employee (f_name,l_name,contact,email,question,answer,password) values(?,?,?,?,?,?,?)",(
                         self.txt_fname.get(),
                         self.txt_lname.get(),
                         self.txt_contact.get(),
@@ -108,6 +113,7 @@ class Register:
                     con.close()
                     messagebox.showinfo("Success","Registration Successful",parent=self.root)
                     self.clear()
+                    self.login_window()
             except Exception as ex:
                 messagebox.showerror("Error",f"Error due to {str(ex)}",parent=self.root)
 
